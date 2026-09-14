@@ -1,0 +1,11 @@
+.insulin-svg text { fill: #d4e7ec; font-family: var(--font-sans, sans-serif); font-size: 18px; font-weight: 450; }
+.insulin-svg .insulin-kicker { fill: #83a9b4; font-size: 14px; font-weight: 600; letter-spacing: 1.9px; }
+.insulin-svg .insulin-small { fill: #91adb8; font-size: 16px; }
+.insulin-grid { stroke: #213641; stroke-width: 1; fill: none; }
+.insulin-leader { stroke: #618594; stroke-width: 1; fill: none; }
+.insulin-flow { stroke: #77bfb3; stroke-width: 1.5; fill: none; }
+.insulin-svg path, .insulin-svg circle { transition: opacity .4s ease, fill-opacity .4s ease; }
+.insulin-glucose-drift { animation: insulin-drift 3.6s ease-in-out infinite; }
+@keyframes insulin-drift { 0%, 100% { transform: translateX(-4px); } 50% { transform: translateX(5px); } }
+.is-paused .insulin-svg * { animation-play-state: paused !important; }
+@media (prefers-reduced-motion: reduce) { .insulin-svg * { animation: none !important; transition: none !important; } }

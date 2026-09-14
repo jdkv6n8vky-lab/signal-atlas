@@ -1,0 +1,10 @@
+.anesthesia-svg { overflow: visible; }
+.anesthesia-svg text { fill: #d4e7ec; font-family: var(--font-sans, sans-serif); font-size: 18px; font-weight: 450; }
+.anesthesia-svg .anesthesia-kicker { fill: #84a5b4; font-size: 14px; letter-spacing: 2.1px; font-weight: 600; }
+.anesthesia-svg .anesthesia-small { fill: #91aab6; font-size: 16px; }
+.anesthesia-svg .anesthesia-label { fill: #c6dde6; font-size: 18px; }
+.anesthesia-leader { fill: none; stroke: #547380; stroke-width: 1; }
+.anesthesia-grid { fill: none; stroke: #203441; stroke-width: 1; }
+.anesthesia-svg path, .anesthesia-svg circle { transition: opacity .45s ease, stroke-width .45s ease; }
+.is-paused .anesthesia-svg *, .is-paused .anesthesia-svg { animation-play-state: paused !important; }
+@media (prefers-reduced-motion: reduce) { .anesthesia-svg * { transition: none !important; animation: none !important; } }

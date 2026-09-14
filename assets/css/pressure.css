@@ -1,0 +1,18 @@
+.pressure-scene { overflow: visible; font-family: inherit; fill: #dce8ee; }
+.pressure-scene text { font-family: inherit; }
+.pressure-scene .pressure-label { font-size: 18px; font-weight: 550; letter-spacing: -.2px; }
+.pressure-scene .pressure-small { font-size: 16px; fill: #97abba; font-weight: 400; }
+.pressure-scene .pressure-tiny { font-size: 13px; fill: #8095a6; font-weight: 450; letter-spacing: .3px; }
+.pressure-scene .pressure-value { font-size: 24px; font-variant-numeric: tabular-nums; }
+.pressure-scene .pressure-challenge { font-size: 39px; font-weight: 450; font-variant-numeric: tabular-nums; }
+.pressure-scene .pressure-nts { font-size: 15px; font-weight: 600; fill: #b2e9f1; }
+.pressure-scene .pressure-gauge-number { font-size: 27px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.pressure-scene .pressure-loop-label { font-size: 16px; fill: #b5ead1; font-weight: 500; }
+.pressure-heart { transform-box: fill-box; transform-origin: 50% 58%; animation: pressure-beat var(--pressure-beat, .83s) ease-in-out infinite; }
+.pressure-heart-wrap { filter: drop-shadow(0 12px 25px #04080b55); }
+.pressure-vessel, .pressure-brain { transition: opacity .3s ease; }
+.pressure-rbc { filter: drop-shadow(0 2px 2px #15081266); }
+.pressure-feedback { isolation: isolate; }
+.is-paused .pressure-heart { animation-play-state: paused; }
+@keyframes pressure-beat { 0%, 45%, 100% { transform: scale(1); } 14% { transform: scale(.973, .983); } 26% { transform: scale(1.012, 1.008); } }
+@media (prefers-reduced-motion: reduce) { .pressure-heart { animation: none; } .pressure-vessel, .pressure-brain { transition: none; } }
