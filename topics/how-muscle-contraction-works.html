@@ -1,433 +1,61 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="theme-color" content="#07111f" />
-<title>How Muscle Contraction Works | Signal Atlas</title>
-<style>
-:root{
-  --bg:#07111f;--panel:#0d1d33;--panel2:#102a48;--ink:#eef7ff;--muted:#a9bfd7;--line:#274b70;
-  --cyan:#55d6ff;--blue:#4c7dff;--green:#74ffb0;--yellow:#ffd86b;--red:#ff6576;--purple:#b78cff;
-  --orange:#ff9c5d;--pink:#ff7db8;--shadow:0 28px 80px rgba(0,0,0,.34);--softShadow:0 18px 45px rgba(0,0,0,.24)
-}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 18% -10%,#17385f 0,#07111f 40%,#040914 100%);color:var(--ink)}
-body{overflow-x:hidden}button,input{font:inherit}.hidden{display:none!important}
-button:focus-visible,input:focus-visible{outline:3px solid rgba(85,214,255,.75);outline-offset:3px}
-.app{max-width:1360px;margin:0 auto;padding:18px 18px 42px}
-.topbar{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:16px;padding:4px 2px}
-.brandRow{display:flex;align-items:center;gap:11px;margin-bottom:11px}.brandMark{width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,var(--cyan),var(--green));box-shadow:0 0 26px rgba(85,214,255,.32);position:relative}.brandMark:before,.brandMark:after{content:"";position:absolute;border-radius:999px;background:#07111f}.brandMark:before{width:20px;height:4px;left:7px;top:9px;transform:rotate(-20deg)}.brandMark:after{width:14px;height:4px;left:10px;top:20px;transform:rotate(22deg)}
-.brandText{display:grid;line-height:1}.brandText strong{font-size:14px;letter-spacing:.02em}.brandText span{color:var(--muted);font-size:10.5px;margin-top:4px;text-transform:uppercase;letter-spacing:.12em;font-weight:850}
-.kicker{margin:0 0 8px;color:var(--cyan);font-size:12px;font-weight:950;letter-spacing:.16em;text-transform:uppercase}
-h1{margin:0;font-size:clamp(34px,5vw,60px);letter-spacing:-.06em;line-height:.94}.subtitle{margin:12px 0 0;max-width:880px;color:var(--muted);font-size:15.5px;line-height:1.52}
-.controls{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}.btn{border:1px solid rgba(255,255,255,.15);background:#112842;color:var(--ink);border-radius:14px;padding:10px 14px;font-weight:900;cursor:pointer;transition:.18s;box-shadow:0 10px 28px rgba(0,0,0,.16)}.btn:hover{transform:translateY(-1px);border-color:rgba(85,214,255,.65);background:#173255}.btn.primary{background:linear-gradient(135deg,#168db7,#17b987);border-color:transparent}.btn.secondary{background:#191f3b;border-color:#3b4775}.btn:disabled{opacity:.42;cursor:not-allowed;transform:none}.exitFull{display:none}
-.layout{display:grid;grid-template-columns:322px minmax(0,1fr);gap:16px}.side,.main{border:1px solid rgba(255,255,255,.10);border-radius:26px;background:rgba(13,29,51,.86);box-shadow:var(--shadow);backdrop-filter:blur(14px)}
-.side{padding:15px;min-height:744px;display:flex;flex-direction:column}.progressTop{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:11.5px;font-weight:900;letter-spacing:.07em;text-transform:uppercase}.progress{height:10px;background:#06101e;border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,.08);margin:12px 0 14px}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--green));transition:.35s cubic-bezier(.2,.8,.2,1)}
-.stepList{display:grid;gap:7px;max-height:520px;overflow:auto;padding-right:3px;scrollbar-width:thin;scrollbar-color:#244564 transparent}.stepBtn{text-align:left;display:grid;grid-template-columns:32px minmax(0,1fr);gap:10px;padding:10px;border-radius:14px;border:1px solid transparent;background:transparent;color:#b8cde3;cursor:pointer;transition:.16s}.stepBtn:hover{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.06)}.stepBtn.active{background:#eef7ff;color:#07111f;box-shadow:0 12px 30px rgba(85,214,255,.15)}.stepBtn.done{color:#b7f8d4}.stepNum{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:#132844;color:#95b1ce;font-size:12px;font-weight:950}.stepBtn.active .stepNum{background:#07111f;color:#fff}.stepBtn strong{display:block;font-size:13px;line-height:1.18}.stepBtn small{display:block;margin-top:3px;font-size:10.5px;line-height:1.25;opacity:.75}.stepBtn .kind{display:inline-block;margin-top:5px;font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-weight:950;opacity:.62}
-.labControls{display:grid;gap:9px;margin-top:14px}.labHead{display:flex;align-items:center;justify-content:space-between;color:#dcecff;font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:.09em}.labBadge{color:#8de9ff;background:rgba(85,214,255,.08);border:1px solid rgba(85,214,255,.2);padding:5px 7px;border-radius:999px}.controlCard{border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);border-radius:16px;padding:10px}.controlCard label{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.81rem;font-weight:900;color:#dcecff}.controlCard input[type=range]{width:100%;accent-color:var(--cyan);margin-top:8px}.toggle{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}.toggle button{border:1px solid rgba(255,255,255,.11);background:rgba(255,255,255,.045);color:#dcecff;border-radius:11px;padding:8px;font-weight:900;cursor:pointer}.toggle button.active{background:rgba(116,255,176,.16);border-color:rgba(116,255,176,.52);color:#d8ffe9}.controlNote{color:#9fb8d4;font-size:.72rem;line-height:1.38;margin-top:8px}.labButtons{display:grid;grid-template-columns:1fr 1fr;gap:7px}.labBtn{border:1px solid rgba(255,255,255,.12);background:#10243c;color:#eaf7ff;border-radius:12px;padding:9px 8px;font-size:11px;font-weight:900;cursor:pointer}.labBtn:hover{border-color:rgba(85,214,255,.55)}
-.main{overflow:hidden;display:grid;grid-template-rows:auto 1fr auto;min-width:0}.info{padding:18px 20px 15px;border-bottom:1px solid rgba(255,255,255,.09);display:grid;grid-template-columns:minmax(0,1fr) 490px;gap:16px}.tag{display:inline-flex;padding:6px 9px;border-radius:999px;background:rgba(85,214,255,.12);color:#a7eaff;border:1px solid rgba(85,214,255,.25);font-size:11px;font-weight:950;letter-spacing:.1em;text-transform:uppercase}.stepTitle{margin:9px 0 6px;font-size:28px;letter-spacing:-.035em}.stepExplain{margin:0;color:#c9dced;line-height:1.5;font-size:15px}.key{margin-top:10px;display:inline-flex;gap:8px;align-items:flex-start;padding:9px 11px;border-radius:13px;background:#081626;border:1px solid #203c5c;color:#eef7ff;font-size:13px;font-weight:850;line-height:1.36}.key:before{content:"KEY";font-size:9px;letter-spacing:.08em;color:var(--green);margin-top:3px}
-.meters{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;align-self:start}.meter{background:#081626;border:1px solid #203c5c;border-radius:14px;padding:9px;min-width:0}.meterTop{display:flex;justify-content:space-between;gap:6px;color:#9fb8d4;font-size:9.3px;font-weight:950;text-transform:uppercase;letter-spacing:.04em;line-height:1.15}.meterTop span:first-child{overflow:hidden;text-overflow:ellipsis}.meterTop span:last-child{color:white;font-size:12px;letter-spacing:0;white-space:nowrap}.track{height:7px;background:#132844;border-radius:999px;overflow:hidden;margin-top:7px}.fill{height:100%;width:0;transition:.38s cubic-bezier(.2,.8,.2,1)}.signalFill{background:var(--cyan)}.calciumFill{background:linear-gradient(90deg,var(--cyan),var(--purple))}.forceFill{background:linear-gradient(90deg,var(--yellow),var(--orange),var(--red))}.lengthFill{background:var(--green)}
-.stageWrap{padding:14px 18px}.stage{position:relative;height:600px;border-radius:24px;background:radial-gradient(circle at 68% 18%,rgba(85,214,255,.10),transparent 34%),linear-gradient(180deg,#0a1b2f,#07111f);border:1px solid rgba(255,255,255,.09);overflow:hidden;isolation:isolate}.stage:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.025),transparent 20%,transparent 80%,rgba(0,0,0,.12));z-index:90}.sceneLabel{position:absolute;top:14px;left:15px;z-index:80;padding:7px 9px;border-radius:999px;background:rgba(0,0,0,.30);border:1px solid rgba(255,255,255,.12);font-size:11px;font-weight:950;text-transform:uppercase;letter-spacing:.08em;color:#dff4ff}.scaleTrail{position:absolute;top:16px;right:16px;z-index:80;display:flex;gap:6px}.scaleDot{width:8px;height:8px;border-radius:50%;background:#284765;border:1px solid #4e7295}.scaleDot.on{background:var(--cyan);box-shadow:0 0 10px rgba(85,214,255,.7)}
-.bubble{position:absolute;left:18px;right:18px;bottom:16px;z-index:81;background:rgba(238,247,255,.97);color:#0a1728;border-radius:18px;padding:11px 13px;box-shadow:0 18px 45px rgba(0,0,0,.28);font-size:13.2px;line-height:1.4;font-weight:760;border:1px solid rgba(255,255,255,.86)}.bubble strong{display:block;margin-bottom:4px;font-size:10.5px;color:#2456cc;text-transform:uppercase;letter-spacing:.08em}.bubble .cause{color:#315372;font-weight:850}
-.scene{position:absolute;inset:0;display:none;z-index:10}.scene.active{display:block;animation:sceneIn .35s ease both}.scene svg{width:100%;height:100%;display:block}.svgLabel{font-size:13px;font-weight:950;fill:#edf7ff}.svgSmall{font-size:11px;font-weight:800;fill:#a8bfd7}.svgTiny{font-size:9.6px;font-weight:800;fill:#87a5c3}.layer{opacity:.11;transition:.34s opacity,.34s filter}.layer.on{opacity:1}.layer.hot{filter:drop-shadow(0 0 10px rgba(85,214,255,.38))}@keyframes sceneIn{from{opacity:0;transform:scale(.992)}to{opacity:1;transform:none}}
-.pulse{animation:pulse 1.15s ease-in-out infinite}@keyframes pulse{50%{filter:drop-shadow(0 0 14px rgba(85,214,255,.9))}}.dash{stroke-dasharray:14 12;animation:dash 1s linear infinite}@keyframes dash{to{stroke-dashoffset:-52}}.float{animation:float 1.5s ease-in-out infinite alternate}@keyframes float{to{transform:translateY(-6px)}}.flowDot{animation:flowDot 1.9s linear infinite}@keyframes flowDot{from{offset-distance:0%}to{offset-distance:100%}}.spark{animation:spark 1.1s ease-in-out infinite}@keyframes spark{50%{opacity:.18;transform:scale(.86)}}
-.achDot{fill:#ffd86b;filter:drop-shadow(0 0 5px rgba(255,216,107,.7))}.caDot{fill:#b78cff;filter:drop-shadow(0 0 6px rgba(183,140,255,.7))}
-/* sarcomere */
-.sarcomereScene{position:absolute;inset:0;display:none;z-index:10}.sarcomereScene.active{display:block;animation:sceneIn .35s ease both}.sarcomereShell{position:absolute;left:4%;right:4%;top:70px;height:410px}.sarcomere{position:absolute;inset:0;border-radius:24px;background:linear-gradient(180deg,rgba(5,13,24,.80),rgba(6,16,29,.72));border:1px solid rgba(255,255,255,.09);overflow:hidden;box-shadow:inset 0 0 60px rgba(85,214,255,.04)}.zone{position:absolute;top:0;bottom:0;opacity:.09;transition:.45s}.zone.iL{left:6%;width:23%;background:var(--pink)}.zone.a{left:29%;right:29%;background:var(--cyan)}.zone.iR{right:6%;width:23%;background:var(--pink)}.zone.h{left:44%;right:44%;background:var(--yellow);opacity:.08}.zoneLabel{position:absolute;top:42px;font-size:9px;font-weight:950;color:#6688aa;letter-spacing:.12em;text-transform:uppercase}.zlI{left:15%}.zlA{left:49%}.zlH{left:49%;top:58px;color:#987f49}.zrI{right:15%}.zline{position:absolute;top:20px;bottom:20px;width:8px;background:repeating-linear-gradient(180deg,#eef7ff 0 12px,#8fb0cc 12px 24px);border-radius:8px;opacity:.82;transition:.48s cubic-bezier(.2,.8,.2,1)}.zline.left{left:5%}.zline.right{right:5%}.mline{position:absolute;left:50%;top:70px;bottom:55px;width:3px;background:#6583a0;opacity:.72}.filament.actin{position:absolute;height:11px;border-radius:999px;background:repeating-linear-gradient(90deg,#ff7db8 0 16px,#ffc3df 16px 25px);box-shadow:0 0 16px rgba(255,125,184,.2);transition:.48s cubic-bezier(.2,.8,.2,1)}.filament.actin.left{left:6%;width:41%}.filament.actin.right{right:6%;width:41%}.filament.myosin{position:absolute;left:34%;right:34%;height:17px;border-radius:999px;background:linear-gradient(90deg,#55d6ff,#7b8cff,#55d6ff);box-shadow:0 0 20px rgba(85,214,255,.25)}.row1{top:112px}.row2{top:183px}.row3{top:254px}.row4{top:325px}.head{position:absolute;width:39px;height:9px;border-radius:8px;background:#55d6ff;transform-origin:left center;transition:.32s cubic-bezier(.2,.8,.2,1);box-shadow:0 0 8px rgba(85,214,255,.38)}.head:after{content:"";position:absolute;right:-5px;top:-4px;width:15px;height:15px;border-radius:50%;background:inherit}.head.bound{background:#74ffb0;box-shadow:0 0 12px rgba(116,255,176,.62)}.head.stroke{transform:rotate(-31deg) translateX(-4px)}.h1{left:40%;top:91px}.h2{right:40%;top:162px;transform-origin:right center}.h3{left:41%;top:233px}.h4{right:41%;top:304px;transform-origin:right center}.h2.stroke,.h4.stroke{transform:rotate(31deg) translateX(4px)}
-.bindingSite{position:absolute;width:13px;height:13px;border-radius:50%;background:#ffd86b;box-shadow:0 0 10px rgba(255,216,107,.72);transition:.28s}.bs1{left:37%;top:111px}.bs2{right:37%;top:182px}.bs3{left:38%;top:253px}.bs4{right:38%;top:324px}.bindingSite.blocked{background:#50647a;box-shadow:none}.tropo{position:absolute;height:5px;border-radius:999px;background:#ff9c5d;opacity:.95;transition:.38s cubic-bezier(.2,.8,.2,1)}.tp1{left:7%;width:40%;top:104px}.tp2{right:7%;width:40%;top:175px}.tp3{left:7%;width:40%;top:246px}.tp4{right:7%;width:40%;top:317px}.tropo.open{transform:translateY(-14px)}.sarcoLabel{position:absolute;top:22px;font-size:11px;font-weight:900;color:#a9bfd6;text-transform:uppercase;letter-spacing:.08em}.sarcoLabel.left{left:7%}.sarcoLabel.center{left:47%}.sarcoLabel.right{right:7%}.calciumOrb{position:absolute;width:14px;height:14px;border-radius:50%;background:#b78cff;box-shadow:0 0 13px rgba(183,140,255,.72);opacity:0;transition:.25s}.calciumOrb.on{opacity:1;animation:float 1.25s ease-in-out infinite alternate}.c1{left:18%;top:72px}.c2{left:27%;top:220px}.c3{right:24%;top:126px}.c4{right:17%;top:286px}.sarcomere.contract .zline.left{left:12%}.sarcomere.contract .zline.right{right:12%}.sarcomere.contract .filament.actin.left{left:13%;width:39%}.sarcomere.contract .filament.actin.right{right:13%;width:39%}.sarcomere.contract .zone.iL,.sarcomere.contract .zone.iR{width:16%}.sarcomere.contract .zone.h{left:47%;right:47%}.atpBadge{position:absolute;left:18px;bottom:18px;padding:8px 10px;border-radius:999px;background:rgba(116,255,176,.12);border:1px solid rgba(116,255,176,.36);color:#baffd8;font-weight:950;font-size:10px;text-transform:uppercase;letter-spacing:.08em}.atpBadge.off{background:rgba(255,101,118,.12);border-color:rgba(255,101,118,.38);color:#ffc2ca}.rigorNote{position:absolute;right:18px;bottom:18px;max-width:340px;background:rgba(66,23,35,.92);border:1px solid rgba(255,101,118,.35);color:#ffd3d9;border-radius:14px;padding:10px 12px;font-size:11px;font-weight:800;line-height:1.35;opacity:0;transform:translateY(8px);transition:.25s}.rigorNote.show{opacity:1;transform:none}.cycleStrip{position:absolute;left:50%;transform:translateX(-50%);bottom:-44px;display:flex;gap:7px;z-index:30}.cyclePhase{padding:7px 10px;border-radius:999px;background:#0b1a2d;border:1px solid #244866;color:#7898b6;font-size:9.5px;font-weight:950;text-transform:uppercase;letter-spacing:.06em;transition:.2s}.cyclePhase.on{color:#07111f;background:var(--green);border-color:transparent;box-shadow:0 0 20px rgba(116,255,176,.35)}
-/* resources */
-.resourceScene{position:absolute;inset:0;display:none;padding:58px 28px 30px;overflow:auto;z-index:25;background:linear-gradient(180deg,#081728,#07111f)}.resourceScene.active{display:block}.resourceTitle{margin:0;font-size:34px;letter-spacing:-.04em}.resourceLead{margin:8px 0 0;color:#bfd0e4;max-width:820px;line-height:1.55}.resourceGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:16px}.resourceCard{background:rgba(13,27,45,.96);border:1px solid #274a6d;border-radius:20px;padding:16px;box-shadow:0 16px 38px rgba(0,0,0,.18)}.resourceCard h3{margin:0 0 7px;font-size:16px;letter-spacing:-.02em}.resourceCard p{margin:0;color:#bfd0e4;line-height:1.46;font-size:13px}.resourceCard .miniTag{display:inline-block;margin-bottom:8px;color:#8fe9ff;font-size:9px;font-weight:950;text-transform:uppercase;letter-spacing:.09em}.quizWrap{max-width:780px;margin-top:18px}.quizProgress{display:flex;gap:6px;margin-bottom:12px}.quizPip{width:34px;height:6px;border-radius:999px;background:#17324e}.quizPip.done{background:var(--green)}.quizPip.current{background:var(--cyan)}.quizQuestion{font-size:20px;font-weight:900;line-height:1.35}.quizChoices{display:grid;gap:9px;margin-top:14px}.choiceBtn{border:1px solid #274a6d;background:#10243c;color:#eef6ff;border-radius:15px;text-align:left;padding:12px 13px;font-weight:800;cursor:pointer}.choiceBtn:hover{border-color:#57d7ff}.choiceBtn.correct{background:#0c3d31;border-color:#38e59f;color:#caffea}.choiceBtn.wrong{background:#421723;border-color:#ff4f64;color:#ffd6dc}.quizFeedback{margin-top:12px;min-height:34px;color:#bfd0e4;font-weight:800;line-height:1.45}.quizNext{margin-top:10px}.scoreCard{padding:18px;border-radius:20px;background:linear-gradient(135deg,rgba(85,214,255,.12),rgba(116,255,176,.08));border:1px solid rgba(85,214,255,.25)}.scoreCard strong{font-size:36px;display:block;margin-bottom:4px}
-.footer{border-top:1px solid rgba(255,255,255,.09);padding:15px 20px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.nav{display:flex;gap:9px}.hint{color:var(--muted);font-size:11.5px;font-weight:800}.sources{margin:14px 3px 0;color:#8fa6be;font-size:11.5px;line-height:1.55}.sources a{color:#7fdfff;text-decoration:none}.sources strong{color:#bdd0e5}
-.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;pointer-events:none;z-index:10000;background:#eef7ff;color:#07111f;border-radius:14px;padding:10px 13px;font-weight:900;font-size:12px;box-shadow:var(--softShadow);transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}
-.full .app{max-width:none;width:100vw;height:100vh;padding:12px;display:grid;grid-template-rows:1fr}.full .topbar{display:none}.full .layout{height:calc(100vh - 24px);grid-template-columns:270px 1fr}.full .side,.full .main{height:100%;min-height:0}.full .stepList{max-height:calc(100vh - 330px)}.full .stageWrap{height:100%;padding:11px}.full .stage{height:100%;min-height:0}.full .exitFull{display:inline-flex}.full .info{padding-top:14px;padding-bottom:12px}.full .footer{padding-top:10px;padding-bottom:11px}.full .sources{display:none}
-@media(max-width:1050px){.info{grid-template-columns:1fr}.meters{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:930px){.layout{grid-template-columns:1fr}.side{order:2;min-height:auto}.stepList{max-height:320px}.stage{height:590px}.full .layout{grid-template-columns:1fr}.full .side{display:none}.full .stage{height:100%}.full .info{grid-template-columns:1fr}.full .meters{grid-template-columns:repeat(4,1fr)}}
-@media(max-width:680px){.topbar{display:block}.controls{justify-content:flex-start;margin-top:14px}.meters{grid-template-columns:1fr 1fr}.stage{height:650px}.sarcomereShell{left:2%;right:2%;top:86px;transform:scale(.92);transform-origin:50% 20%}.bubble{font-size:12.4px}.footer{display:grid}.nav{width:100%}.nav .btn{flex:1}.resourceScene{padding:58px 14px 20px}.scaleTrail{display:none}}
-@media(max-width:470px){.app{padding:12px 10px 28px}h1{font-size:36px}.meters{grid-template-columns:1fr 1fr}.stage{height:690px}.info{padding:15px}.stageWrap{padding:10px}.sceneLabel{font-size:9px}.sarcomereShell{top:110px;transform:scale(.78);left:-9%;right:-9%}.bubble{left:10px;right:10px;bottom:10px}.labButtons{grid-template-columns:1fr}.controls .btn{flex:1}.brandRow{margin-top:4px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.001ms!important}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080d14">
+  <meta name="description" content="Follow a nerve impulse into the molecular machinery of movement. Explore calcium, ATP, sliding filaments and muscle force in an interactive Signal Atlas module.">
+  <title>How Muscle Contraction Works — Signal Atlas</title>
+  <link rel="icon" href="../assets/icons/atlas.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <link rel="stylesheet" href="../assets/css/muscle.css">
+  <script src="../assets/js/modules/muscle-content.js" defer></script>
+  <script src="../assets/js/modules/muscle.js" defer></script>
 </head>
-<body>
-<div class="app" id="app">
-  <header class="topbar">
-    <div>
-      <div class="brandRow"><span class="brandMark" aria-hidden="true"></span><span class="brandText"><strong>Signal Atlas</strong><span>Interactive mechanism map</span></span></div>
-      <p class="kicker">Physiology · Skeletal muscle</p>
-      <h1>How Muscle Contraction Works</h1>
-      <p class="subtitle">Follow one signal from a motor neuron to calcium release, cross-bridge cycling, sarcomere shortening, and relaxation—then change the molecular conditions yourself.</p>
-    </div>
-    <div class="controls" aria-label="Module controls">
-      <button class="btn primary" id="playBtn" type="button">Play</button>
-      <button class="btn secondary" id="restartBtn" type="button">Restart</button>
-      <button class="btn" id="fullBtn" type="button">Full screen</button>
-      <button class="btn exitFull" id="exitFullBtn" type="button">Exit</button>
-    </div>
+<body class="muscle-page">
+<a class="skip-link" href="#main-content">Skip to mechanism</a>
+<div class="muscle-app" id="module-root">
+  <header class="muscle-header">
+    <a class="brand" href="../index.html" aria-label="Signal Atlas home"><img class="brand-icon" src="../assets/icons/atlas.svg" alt=""><span>SIGNAL ATLAS</span></a>
+    <div class="module-identity"><span class="eyebrow">MODULE 05 / SKELETAL MUSCLE</span><h1>How muscle contraction works</h1></div>
+    <div class="header-actions"><button class="m-button motion-control" id="headerMotionBtn" aria-label="Pause animation" title="Pause animation" aria-pressed="false">Ⅱ</button><button class="m-button" id="playBtn" aria-pressed="false"><span id="playIcon" aria-hidden="true">▶</span> <span id="playLabel">Autoplay</span></button><button class="m-button icon-control" id="fullBtn" aria-label="Enter fullscreen" title="Enter fullscreen">⛶</button></div>
   </header>
-
-  <div class="layout">
-    <aside class="side" aria-label="Module navigation">
-      <div class="progressTop"><span id="stepCounter">Step 1 of 15</span><span id="partLabel">Signal</span></div>
-      <div class="progress"><div class="bar" id="progressBar"></div></div>
-      <div class="stepList" id="stepList"></div>
-
-      <div class="labControls hidden" id="labControls">
-        <div class="labHead"><span>Mechanism lab</span><span class="labBadge">Live</span></div>
-        <div class="controlCard">
-          <label><span>Cytosolic Ca²⁺</span><span id="caVal">88%</span></label>
-          <input id="caSlider" type="range" min="0" max="100" value="88" aria-label="Cytosolic calcium level" />
-          <div class="controlNote" id="caNote">High Ca²⁺ exposes most actin binding sites.</div>
-        </div>
-        <div class="controlCard">
-          <label><span>ATP supply</span><span id="atpVal">Normal</span></label>
-          <div class="toggle" role="group" aria-label="ATP supply">
-            <button class="active" id="atpOn" type="button">Available</button>
-            <button id="atpOff" type="button">Depleted</button>
-          </div>
-          <div class="controlNote">ATP is required both to detach myosin and to pump Ca²⁺ back into the SR.</div>
-        </div>
-        <div class="controlCard">
-          <label><span>Stimulation</span><span id="freqVal">1 pulse</span></label>
-          <input id="freqSlider" type="range" min="1" max="20" value="1" aria-label="Stimulation frequency" />
-          <div class="controlNote">Higher-frequency stimulation can keep cytosolic Ca²⁺ elevated and increase force through summation.</div>
-        </div>
-        <div class="labButtons">
-          <button class="labBtn" id="pulseBtn" type="button">Stimulate</button>
-          <button class="labBtn" id="cycleBtn" type="button">Run cycle</button>
-          <button class="labBtn" id="resetLabBtn" type="button">Reset lab</button>
-          <button class="labBtn" id="lowCaPresetBtn" type="button">Low-Ca preset</button>
-        </div>
-      </div>
+  <div class="atlas-layout">
+    <aside class="muscle-guide" aria-label="Mechanism guide">
+      <div class="chapter-meta"><span id="stepCounter">01 / 20</span><span id="partLabel">THE SIGNAL</span></div>
+      <div class="chapter-progress" role="progressbar" aria-label="Module progress" aria-valuemin="0" aria-valuemax="20" aria-valuenow="1"><span id="progressBar"></span></div>
+      <label class="sr-only" for="chapterSelect">Jump to chapter</label><select id="chapterSelect" class="chapter-select"></select>
+      <div class="chapter-copy"><p class="eyebrow" id="chapterCategory"></p><h2 id="stepTitle" tabindex="-1"></h2><p id="stepExplain"></p><div class="takeaway"><span class="eyebrow">THE CONNECTION</span><p id="keyIdea"></p></div></div>
+      <details class="chapter-menu" open><summary>Inside the mechanism <span>20 chapters</span></summary><nav aria-label="Chapters"><ol id="stepList"></ol></nav></details>
+      <button class="restart-control" id="restartBtn"><span aria-hidden="true">↺</span> Restart module</button>
     </aside>
-
-    <main class="main">
-      <section class="info">
-        <div>
-          <span class="tag" id="tag">Excitation</span>
-          <h2 class="stepTitle" id="stepTitle">Motor neuron fires</h2>
-          <p class="stepExplain" id="stepExplain"></p>
-          <div class="key" id="keyIdea"></div>
+    <main id="main-content" class="muscle-workspace" tabindex="-1">
+      <section class="mechanism-panel" aria-labelledby="sceneTitle">
+        <header class="stage-heading"><div><div class="eyebrow"><span class="status-dot"></span> <span id="stageKicker">FROM SIGNAL TO MOVEMENT</span></div><h2 id="sceneTitle">An impulse. A connection.</h2></div><nav class="scale-nav" aria-label="Explore biological scales"><button data-go="0">01 <span>Synapse</span></button><button data-go="4">02 <span>Fiber</span></button><button data-go="13">03 <span>Sarcomere</span></button></nav></header>
+        <div id="mechanismView">
+          <div class="stage-meta"><span id="sceneLabel"></span><span id="signalState"></span></div>
+          <div class="science-diagram" id="diagram"></div>
+          <div class="diagram-legend" id="diagramLegend"></div>
+          <div class="bridge-focus" id="bridgeFocus" hidden><div class="bridge-heading"><span class="eyebrow">ONE MYOSIN HEAD / SLOWED DOWN</span><button class="text-control" id="cycleBtn">Run full cycle ↻</button></div><div class="bridge-content"><div id="bridgeDiagram"></div><div class="bridge-narrative"><div class="cycle-phases" aria-label="Cross-bridge cycle"><button data-phase="0">01 <span>Attach</span></button><button data-phase="1">02 <span>Stroke</span></button><button data-phase="2">03 <span>Detach</span></button><button data-phase="3">04 <span>Reset</span></button></div><h3 id="cycleTitle"></h3><p id="cycleCopy"></p></div></div></div>
+          <div class="causal-strip"><span id="causeText"></span><span aria-hidden="true">→</span><strong id="effectText"></strong></div>
         </div>
-        <div class="meters" aria-label="Mechanism status meters">
-          <div class="meter"><div class="meterTop"><span>Neural signal</span><span id="signalPct">100%</span></div><div class="track"><div class="fill signalFill" id="signalFill"></div></div></div>
-          <div class="meter"><div class="meterTop"><span>Cytosolic Ca²⁺</span><span id="calciumPct">5%</span></div><div class="track"><div class="fill calciumFill" id="calciumFill"></div></div></div>
-          <div class="meter"><div class="meterTop"><span>Contractile force</span><span id="forcePct">0%</span></div><div class="track"><div class="fill forceFill" id="forceFill"></div></div></div>
-          <div class="meter"><div class="meterTop"><span>Sarcomere length</span><span id="lengthPct">100%</span></div><div class="track"><div class="fill lengthFill" id="lengthFill"></div></div></div>
-        </div>
+        <div id="readingView" hidden></div>
       </section>
-
-      <section class="stageWrap">
-        <div class="stage" id="stage">
-          <div class="sceneLabel" id="sceneLabel">Neuromuscular junction</div>
-          <div class="scaleTrail" aria-label="Scale indicator"><span class="scaleDot on" id="scale1"></span><span class="scaleDot" id="scale2"></span><span class="scaleDot" id="scale3"></span></div>
-
-          <div class="scene active" id="nmjScene">
-            <svg viewBox="0 0 1000 600" role="img" aria-label="Motor neuron, neuromuscular junction, T-tubule and sarcoplasmic reticulum">
-              <defs>
-                <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="12" stdDeviation="15" flood-color="#000" flood-opacity=".32"/></filter>
-                <linearGradient id="axonG" x1="0" x2="1"><stop offset="0" stop-color="#4c7dff"/><stop offset="1" stop-color="#55d6ff"/></linearGradient>
-                <linearGradient id="muscleG" x1="0" x2="1"><stop offset="0" stop-color="#7a2337"/><stop offset=".5" stop-color="#b63f50"/><stop offset="1" stop-color="#6c1d31"/></linearGradient>
-                <path id="apMotionPath" d="M92 158 C210 158 250 157 340 183"/>
-              </defs>
-
-              <g id="neuronLayer" class="layer on">
-                <path d="M72 158 C210 158 248 156 347 181" fill="none" stroke="url(#axonG)" stroke-width="30" stroke-linecap="round" filter="url(#shadow)"/>
-                <ellipse cx="394" cy="199" rx="96" ry="72" fill="#193e67" stroke="#55d6ff" stroke-width="5"/>
-                <text x="78" y="115" class="svgLabel">somatic motor neuron</text><text x="344" y="205" class="svgSmall">axon terminal</text>
-                <path d="M92 158 C210 158 250 157 340 183" fill="none" stroke="#ffd86b" stroke-width="6" stroke-linecap="round" class="dash"/>
-                <circle r="10" fill="#fff4b3" class="pulse"><animateMotion dur="1.7s" repeatCount="indefinite"><mpath href="#apMotionPath"/></animateMotion></circle>
-              </g>
-
-              <g id="vesicleLayer" class="layer">
-                <circle cx="350" cy="176" r="17" fill="#253d5a" stroke="#ffd86b"/><circle cx="386" cy="164" r="17" fill="#253d5a" stroke="#ffd86b"/><circle cx="420" cy="190" r="17" fill="#253d5a" stroke="#ffd86b"/>
-                <circle cx="345" cy="173" r="4" class="achDot"/><circle cx="354" cy="181" r="4" class="achDot"/><circle cx="382" cy="160" r="4" class="achDot"/><circle cx="391" cy="168" r="4" class="achDot"/><text x="325" y="126" class="svgSmall">ACh vesicles</text>
-              </g>
-
-              <g id="cleftLayer" class="layer">
-                <rect x="304" y="268" width="216" height="72" rx="24" fill="#081424" stroke="#274a6d" stroke-width="2"/><text x="343" y="312" class="svgSmall">synaptic cleft</text>
-                <g id="achCloud"><circle cx="350" cy="281" r="6" class="achDot float"/><circle cx="382" cy="301" r="6" class="achDot float"/><circle cx="413" cy="286" r="6" class="achDot float"/><circle cx="450" cy="313" r="6" class="achDot float"/><circle cx="482" cy="290" r="6" class="achDot float"/></g>
-                <path d="M350 240 C352 264 350 281 350 307 M386 238 C390 265 396 286 405 314 M420 244 C431 267 447 287 467 312" fill="none" stroke="#ffd86b" stroke-width="2.4" stroke-dasharray="5 7" opacity=".7"/>
-              </g>
-
-              <g id="muscleLayer" class="layer on">
-                <rect x="82" y="355" width="836" height="154" rx="64" fill="url(#muscleG)" stroke="#ff8898" stroke-width="4" filter="url(#shadow)"/>
-                <path d="M286 356 v78 q0 44 44 44 h62" fill="none" stroke="#ffb3bd" stroke-width="19" stroke-linecap="round"/>
-                <text x="96" y="544" class="svgLabel">skeletal muscle fiber</text><text x="239" y="449" class="svgSmall">T-tubule</text>
-              </g>
-
-              <g id="receptorLayer" class="layer">
-                <g transform="translate(337 337)"><rect width="25" height="39" rx="9" fill="#74ffb0"/><rect x="9" y="6" width="7" height="27" rx="3" fill="#07111f"/></g>
-                <g transform="translate(393 337)"><rect width="25" height="39" rx="9" fill="#74ffb0"/><rect x="9" y="6" width="7" height="27" rx="3" fill="#07111f"/></g>
-                <g transform="translate(449 337)"><rect width="25" height="39" rx="9" fill="#74ffb0"/><rect x="9" y="6" width="7" height="27" rx="3" fill="#07111f"/></g>
-                <text x="327" y="402" class="svgSmall">nicotinic ACh receptors</text>
-              </g>
-
-              <g id="muscleAPLayer" class="layer">
-                <path d="M160 357 H774" fill="none" stroke="#ffd86b" stroke-width="7" class="dash"/>
-                <path d="M286 360 V431 Q286 462 330 462 H408" fill="none" stroke="#ffd86b" stroke-width="7" class="dash"/>
-                <text x="586" y="337" class="svgSmall">muscle action potential</text>
-              </g>
-
-              <g id="srLayer" class="layer">
-                <path d="M520 398 C590 363 658 363 728 398 C788 429 826 424 868 396" fill="none" stroke="#b78cff" stroke-width="25" stroke-linecap="round" opacity=".72"/>
-                <path d="M520 462 C590 427 658 427 728 462 C788 494 826 488 868 460" fill="none" stroke="#b78cff" stroke-width="25" stroke-linecap="round" opacity=".72"/>
-                <text x="622" y="513" class="svgSmall">sarcoplasmic reticulum (SR)</text>
-              </g>
-
-              <g id="channelLayer" class="layer">
-                <rect x="510" y="365" width="28" height="42" rx="9" fill="#55d6ff"/><rect x="540" y="372" width="28" height="42" rx="9" fill="#ff9c5d"/><text x="493" y="349" class="svgSmall">DHPR → RyR1</text>
-              </g>
-
-              <g id="calciumLayer" class="layer">
-                <circle cx="584" cy="420" r="8" class="caDot float"/><circle cx="621" cy="440" r="8" class="caDot float"/><circle cx="665" cy="404" r="8" class="caDot float"/><circle cx="707" cy="446" r="8" class="caDot float"/><circle cx="757" cy="417" r="8" class="caDot float"/><circle cx="808" cy="451" r="8" class="caDot float"/>
-                <text x="587" y="383" class="svgSmall">Ca²⁺ floods the cytosol</text>
-              </g>
-
-              <g id="sercaLayer" class="layer">
-                <path d="M812 450 C792 424 776 408 756 396" fill="none" stroke="#74ffb0" stroke-width="5" stroke-dasharray="8 8" class="dash"/>
-                <rect x="828" y="428" width="35" height="25" rx="8" fill="#74ffb0"/><text x="806" y="480" class="svgTiny">SERCA uses ATP</text>
-              </g>
-            </svg>
-          </div>
-
-          <div class="sarcomereScene" id="sarcomereScene">
-            <div class="sarcomereShell">
-              <div class="sarcomere" id="sarcomere">
-                <div class="zone iL"></div><div class="zone a"></div><div class="zone h"></div><div class="zone iR"></div>
-                <span class="zoneLabel zlI">I band</span><span class="zoneLabel zlA">A band</span><span class="zoneLabel zlH">H zone</span><span class="zoneLabel zrI">I band</span>
-                <div class="sarcoLabel left">Z disc</div><div class="sarcoLabel center">M line</div><div class="sarcoLabel right">Z disc</div>
-                <div class="zline left"></div><div class="zline right"></div><div class="mline"></div>
-                <div class="filament actin left row1"></div><div class="filament actin right row1"></div><div class="filament myosin row1"></div>
-                <div class="filament actin left row2"></div><div class="filament actin right row2"></div><div class="filament myosin row2"></div>
-                <div class="filament actin left row3"></div><div class="filament actin right row3"></div><div class="filament myosin row3"></div>
-                <div class="filament actin left row4"></div><div class="filament actin right row4"></div><div class="filament myosin row4"></div>
-                <div class="tropo tp1"></div><div class="tropo tp2"></div><div class="tropo tp3"></div><div class="tropo tp4"></div>
-                <div class="bindingSite bs1 blocked"></div><div class="bindingSite bs2 blocked"></div><div class="bindingSite bs3 blocked"></div><div class="bindingSite bs4 blocked"></div>
-                <div class="head h1"></div><div class="head h2"></div><div class="head h3"></div><div class="head h4"></div>
-                <div class="calciumOrb c1"></div><div class="calciumOrb c2"></div><div class="calciumOrb c3"></div><div class="calciumOrb c4"></div>
-                <div class="atpBadge" id="atpBadge">ATP available</div>
-                <div class="rigorNote" id="rigorNote">ATP depletion prevents efficient myosin detachment and also impairs Ca²⁺ reuptake. The cycle stalls in a rigor-like state.</div>
-              </div>
-              <div class="cycleStrip" aria-label="Cross-bridge cycle phases"><span class="cyclePhase" data-phase="attach">Attach</span><span class="cyclePhase" data-phase="stroke">Power stroke</span><span class="cyclePhase" data-phase="detach">Detach</span><span class="cyclePhase" data-phase="recock">Re-cock</span></div>
-            </div>
-          </div>
-
-          <div class="resourceScene" id="resourceScene">
-            <h2 class="resourceTitle" id="resourceTitle"></h2>
-            <p class="resourceLead" id="resourceLead"></p>
-            <div class="resourceGrid" id="resourceGrid"></div>
-            <div id="quizArea"></div>
-          </div>
-
-          <div class="bubble" id="bubble"><strong>Cause → effect</strong><span id="bubbleText"></span></div>
-        </div>
+      <section class="muscle-lab" id="labControls" aria-labelledby="labTitle" hidden>
+        <header class="lab-heading"><div><span class="eyebrow">CHANGE A VARIABLE. FOLLOW THE CONSEQUENCE.</span><h2 id="labTitle">The contraction lab</h2></div><button class="text-control" id="resetLabBtn">Reset lab ↺</button></header>
+        <div class="lab-grid"><div class="lab-inputs">
+          <div class="lab-control"><label for="caSlider">Cytosolic Ca²⁺ <output id="caVal" for="caSlider">85%</output></label><input type="range" id="caSlider" min="0" max="100" value="85" aria-describedby="caNote"><p id="caNote">Set calcium directly to explore thin-filament regulation.</p><button class="text-control preset-control" id="lowCaPresetBtn">Try low calcium ↘</button></div>
+          <div class="lab-control"><label for="freqSlider">Stimulation frequency <output id="freqVal" for="freqSlider">10 Hz</output></label><input type="range" id="freqSlider" min="1" max="60" value="10" aria-describedby="freqNote"><p id="freqNote">Apply a 1-second train. Higher rates leave less time for Ca²⁺ removal.</p><div class="stim-actions"><button class="m-button" id="pulseBtn">Single twitch</button><button class="m-button" id="trainBtn">Stimulate train</button></div></div>
+          <div class="lab-control"><span class="control-label" id="atpLabel">ATP supply</span><div class="atp-toggle" role="group" aria-labelledby="atpLabel"><button id="atpOn" aria-pressed="true">Available</button><button id="atpOff" aria-pressed="false">Depleted</button></div><p>ATP detaches myosin, resets the head and powers SERCA.</p><p id="atpNote" class="atp-note" role="status"></p></div>
+        </div><div class="lab-response"><div class="response-readings" aria-label="Illustrative model measurements"><div><span>Free Ca²⁺</span><strong id="calciumPct">85<small>%</small></strong></div><div><span id="forceLabel">Active force</span><strong id="forcePct">0<small>%</small></strong></div><div><span>Z-to-Z length</span><strong id="lengthPct">100<small>%</small></strong></div></div><div class="trace-heading"><span id="traceStatus">Calcium held · steady response</span><button class="text-control" id="motionBtn" aria-pressed="false">Pause motion</button></div><svg id="forceTrace" viewBox="0 0 540 150" role="img" aria-labelledby="traceTitle traceDesc"><title id="traceTitle">Calcium and force over time</title><desc id="traceDesc">Purple calcium rises before gold active force. Each tick at the bottom is a discrete stimulus. The display covers two seconds of model time.</desc><path class="trace-grid" d="M25 20H520M25 70H520M25 120H520M25 20V120"/><text x="0" y="24">100</text><text x="8" y="122">0</text><path id="stimTrace"/><path id="caTrace"/><path id="forcePath"/><text x="25" y="146">0 s</text><text x="498" y="146">2 s</text></svg><div class="trace-legend"><span><i class="ca-color"></i>Ca²⁺</span><span><i class="force-color"></i>Active force</span><span><i class="signal-color"></i>Stimulus</span></div></div></div>
+        <p class="model-note">Illustrative single-fiber model · normalized values · lightly loaded shortening · 5× slower than model time. Timing varies between muscle fibers; force can also develop without shortening.</p>
       </section>
-
-      <section class="footer">
-        <div class="hint">← / → move steps · Space plays/pauses · R restarts · Esc exits full screen</div>
-        <div class="nav"><button class="btn" id="prevBtn" type="button">Back</button><button class="btn primary" id="nextBtn" type="button">Next</button></div>
-      </section>
+      <footer class="workspace-footer"><span id="footerNote">17 steps from electrical signal to mechanical movement.</span><span>SCHEMATIC / NOT TO SCALE</span></footer>
     </main>
   </div>
-
-  <p class="sources"><strong>Science basis:</strong> skeletal-muscle excitation–contraction coupling and the cross-bridge cycle as described in standard anatomy/physiology references. Educational simplification; not medical advice. Core sequence: motor-neuron AP → ACh → muscle AP → T-tubule depolarization → DHPR/RyR1 coupling → SR Ca²⁺ release → troponin/tropomyosin shift → actin–myosin cycling → sarcomere shortening → SERCA-mediated Ca²⁺ reuptake and relaxation.</p>
+  <footer class="transport"><a href="../index.html#modules" class="atlas-back" aria-label="Return to Signal Atlas">← <span>The atlas</span></a><div class="transport-center"><span id="navContext">The signal</span><span class="shortcut-hint"><kbd>←</kbd> <kbd>→</kbd> navigate · <kbd>Space</kbd> autoplay</span></div><nav aria-label="Step navigation"><button class="m-button" id="prevBtn">← <span>Back</span></button><button class="m-button next-button" id="nextBtn"><span>Next step</span> →</button></nav></footer>
+  <div class="sr-only" id="announcement" role="status" aria-live="polite"></div>
 </div>
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-<script>
-const $ = id => document.getElementById(id);
-const qsa = sel => [...document.querySelectorAll(sel)];
-
-const steps = [
-  {part:'Signal',tag:'Excitation',short:'Motor neuron fires',kind:'electrical',title:'Motor neuron fires',scene:'nmj',scale:1,layers:['neuronLayer','muscleLayer'],meters:[100,5,0,100],text:'An action potential travels down a somatic motor neuron toward the neuromuscular junction.',key:'The sequence begins as an electrical signal in the motor neuron.',bubble:'The motor-neuron action potential moves toward the axon terminal.'},
-  {part:'Signal',tag:'Neuromuscular junction',short:'ACh is released',kind:'chemical',title:'Acetylcholine crosses the synapse',scene:'nmj',scale:1,layers:['neuronLayer','vesicleLayer','cleftLayer','muscleLayer'],meters:[100,8,0,100],text:'The arriving action potential triggers acetylcholine (ACh) release from synaptic vesicles. ACh diffuses across the synaptic cleft.',key:'ACh converts the neuron’s electrical signal into a chemical signal at the muscle.',bubble:'ACh is released from vesicles and diffuses across the tiny synaptic gap.'},
-  {part:'Signal',tag:'Motor end plate',short:'Muscle AP begins',kind:'electrical',title:'ACh depolarizes the muscle membrane',scene:'nmj',scale:1,layers:['cleftLayer','receptorLayer','muscleLayer','muscleAPLayer'],meters:[92,12,0,100],text:'ACh binds nicotinic receptors on the motor end plate. The resulting ion current depolarizes the membrane and initiates a muscle action potential.',key:'The muscle fiber now generates and propagates its own action potential.',bubble:'Nicotinic ACh receptors initiate end-plate depolarization, which triggers a muscle action potential.'},
-  {part:'Coupling',tag:'T-tubules',short:'Signal moves inward',kind:'electrical',title:'The action potential enters T-tubules',scene:'nmj',scale:2,layers:['muscleLayer','muscleAPLayer','srLayer'],meters:[82,18,2,100],text:'The action potential spreads across the sarcolemma and dives into T-tubules, carrying depolarization deep into the muscle fiber.',key:'T-tubules bring the surface voltage change close to the calcium-release machinery around each myofibril.',bubble:'The electrical signal is carried from the cell surface into the fiber through the T-tubule network.'},
-  {part:'Coupling',tag:'Calcium release',short:'SR releases Ca²⁺',kind:'coupling',title:'Voltage triggers calcium release from the SR',scene:'nmj',scale:2,layers:['muscleLayer','muscleAPLayer','srLayer','channelLayer','calciumLayer'],meters:[65,88,12,99],text:'T-tubule depolarization changes the DHPR voltage sensor, which mechanically activates nearby RyR1 calcium-release channels in the sarcoplasmic reticulum. Cytosolic Ca²⁺ rises rapidly.',key:'Excitation–contraction coupling converts membrane voltage into a calcium signal.',bubble:'RyR1 channels open and the SR releases stored Ca²⁺ into the cytosol.'},
-  {part:'Filaments',tag:'Regulation',short:'Sites are exposed',kind:'molecular',title:'Calcium moves tropomyosin away',scene:'sarco',scale:3,mode:'expose',meters:[48,92,28,97],text:'Ca²⁺ binds troponin C. The troponin complex changes shape and moves tropomyosin away from myosin-binding sites on actin.',key:'Calcium does not pull the filaments. It removes the molecular brake that blocks actin–myosin interaction.',bubble:'Ca²⁺ binding to troponin shifts tropomyosin and exposes actin binding sites.'},
-  {part:'Cross-bridge',tag:'Attachment',short:'Myosin binds actin',kind:'molecular',title:'A cross-bridge forms',scene:'sarco',scale:3,mode:'bind',meters:[38,90,44,94],text:'An energized myosin head carrying ADP and inorganic phosphate (Pi) binds to an exposed site on actin.',key:'Cross-bridge formation physically links the thick and thin filaments.',bubble:'The energized myosin head attaches to exposed actin.'},
-  {part:'Cross-bridge',tag:'Power stroke',short:'Myosin pulls actin',kind:'molecular',title:'The power stroke pulls actin inward',scene:'sarco',scale:3,mode:'stroke',meters:[28,88,72,88],text:'Release of Pi strengthens actin–myosin binding and drives the myosin head to pivot. ADP then leaves as the thin filament is pulled toward the M line.',key:'The power stroke converts stored chemical energy in the myosin head into filament movement.',bubble:'The myosin head pivots and pulls the thin filament toward the center of the sarcomere.'},
-  {part:'Cross-bridge',tag:'Detachment',short:'ATP detaches myosin',kind:'molecular',title:'ATP breaks the cross-bridge',scene:'sarco',scale:3,mode:'detach',meters:[22,84,70,86],text:'A new ATP molecule binds to myosin, lowering its affinity for actin and causing the myosin head to detach.',key:'ATP binding—not ATP hydrolysis—is what detaches myosin from actin.',bubble:'ATP binds to myosin, causing detachment from actin.'},
-  {part:'Cross-bridge',tag:'Re-cocking',short:'ATP resets myosin',kind:'molecular',title:'ATP hydrolysis re-cocks the myosin head',scene:'sarco',scale:3,mode:'recock',meters:[18,82,76,83],text:'Myosin hydrolyzes ATP to ADP + Pi. The released energy returns the head to a high-energy cocked position, ready to bind again.',key:'ATP hydrolysis re-energizes the motor for another cycle; it does not directly create the power stroke.',bubble:'ATP hydrolysis resets the myosin head to its energized position.'},
-  {part:'Whole sarcomere',tag:'Sliding filament',short:'Sarcomere shortens',kind:'mechanical',title:'Repeated cycles shorten the sarcomere',scene:'sarco',scale:3,mode:'contract',meters:[12,76,94,70],text:'Thousands of cross-bridge cycles pull thin filaments toward the M line. The filaments themselves keep essentially the same length while overlap increases and the Z discs move closer together.',key:'The I band and H zone narrow during contraction; the A band remains essentially constant because thick-filament length does not change.',bubble:'Actin slides inward. The sarcomere shortens because overlap increases—not because actin or myosin shrinks.'},
-  {part:'Relaxation',tag:'Calcium reuptake',short:'Muscle relaxes',kind:'recovery',title:'Calcium is pumped back into the SR',scene:'nmj',scale:2,layers:['muscleLayer','srLayer','sercaLayer'],meters:[0,12,8,96],text:'When stimulation stops, SERCA pumps use ATP to return Ca²⁺ to the sarcoplasmic reticulum. Ca²⁺ leaves troponin, tropomyosin re-covers actin binding sites, and cross-bridge cycling stops.',key:'Relaxation is active: restoring low cytosolic Ca²⁺ requires ATP-powered transport.',bubble:'SERCA lowers cytosolic Ca²⁺. Tropomyosin blocks actin again, so the fiber relaxes.'},
-  {part:'Reference',tag:'Glossary',short:'Glossary',kind:'reference',title:'Glossary',scene:'resource',resource:'glossary',meters:[0,0,0,100],text:'Core structures and molecules in the pathway.',key:'Use the glossary to decode the mechanism.',bubble:''},
-  {part:'Reference',tag:'Key facts',short:'Key facts',kind:'reference',title:'Key facts + misconceptions',scene:'resource',resource:'facts',meters:[0,0,0,100],text:'High-value connections and common mistakes.',key:'These are the details most likely to clarify the mechanism.',bubble:''},
-  {part:'Reference',tag:'Checkpoint',short:'Checkpoint',kind:'assessment',title:'Checkpoint',scene:'resource',resource:'quiz',meters:[0,0,0,100],text:'Test the causal sequence with three questions.',key:'Reason from cause → effect instead of memorizing isolated vocabulary.',bubble:''}
-];
-
-const glossary = [
-  ['Neuromuscular junction','The synapse where a somatic motor neuron communicates with a skeletal muscle fiber.'],
-  ['Acetylcholine (ACh)','The neurotransmitter released by the motor neuron at the neuromuscular junction.'],
-  ['Sarcolemma','The plasma membrane of a muscle fiber.'],
-  ['T-tubule','An inward extension of the sarcolemma that carries depolarization deep into the fiber.'],
-  ['Sarcoplasmic reticulum','The specialized intracellular membrane network that stores Ca²⁺ in skeletal muscle.'],
-  ['DHPR','A voltage-sensitive L-type calcium-channel protein that acts mainly as the T-tubule voltage sensor in skeletal muscle.'],
-  ['RyR1','The sarcoplasmic-reticulum calcium-release channel activated by DHPR in skeletal muscle.'],
-  ['Troponin','A regulatory protein complex; Ca²⁺ binding to troponin C shifts tropomyosin.'],
-  ['Tropomyosin','A regulatory protein that covers myosin-binding sites on actin when the muscle is relaxed.'],
-  ['Cross-bridge','The attachment between a myosin head and actin during contraction.'],
-  ['Power stroke','The pivot of an actin-bound myosin head that pulls the thin filament toward the M line.'],
-  ['SERCA','An ATP-powered Ca²⁺ pump that returns calcium to the SR during relaxation.']
-];
-
-const facts = [
-  ['Sliding filament','Filaments do not appreciably shrink. Thin filaments slide toward the M line, increasing overlap and shortening the sarcomere.','Core model'],
-  ['A band vs. I band','The A band stays essentially constant because it reflects thick-filament length. The I band and H zone narrow as overlap increases.','Anatomy'],
-  ['Calcium controls access','Ca²⁺ binding to troponin moves tropomyosin away from actin binding sites; calcium is a regulatory signal, not the pulling force.','Regulation'],
-  ['ATP does two different jobs','ATP binding detaches myosin from actin. ATP hydrolysis then re-cocks and re-energizes the head.','Energy'],
-  ['Relaxation costs ATP','SERCA pumps require ATP to lower cytosolic Ca²⁺. ATP is therefore needed for both continued cycling and relaxation.','Energy'],
-  ['Order matters','Muscle AP → Ca²⁺ rise → cross-bridge cycling → force. Force does not appear before calcium signaling.','Causality'],
-  ['Common misconception','The SR does not create calcium during each contraction; it stores Ca²⁺ and releases it rapidly when electrically triggered.','Misconception'],
-  ['Frequency and force','Repeated stimulation can keep cytosolic Ca²⁺ elevated between twitches, allowing greater force through temporal summation.','Systems']
-];
-
-const quiz = [
-  {q:'Which event directly exposes the myosin-binding sites on actin?',choices:['ATP binds to myosin','Ca²⁺ binds to troponin and shifts tropomyosin','ACh is broken down in the synaptic cleft','Myosin releases ADP'],answer:1,explain:'Ca²⁺ binding changes the troponin complex and shifts tropomyosin away from actin binding sites.'},
-  {q:'What happens immediately when a new ATP molecule binds to an actin-bound myosin head?',choices:['The head detaches from actin','The power stroke begins','The SR releases Ca²⁺','Tropomyosin blocks actin'],answer:0,explain:'ATP binding decreases myosin’s affinity for actin, causing detachment. Hydrolysis happens afterward and re-cocks the head.'},
-  {q:'During normal sarcomere shortening, which region stays approximately the same length?',choices:['I band','H zone','A band','Distance between Z discs'],answer:2,explain:'The A band corresponds to thick-filament length, which stays essentially constant while thin filaments slide inward.'}
-];
-
-let idx=0, playing=false, timer=null, atpAvailable=true, cycleTimer=null, quizIndex=0, quizScore=0, quizAnswered=false, transientTimer=null;
-
-function buildSteps(){
-  $('stepList').innerHTML='';
-  steps.forEach((s,i)=>{
-    const b=document.createElement('button'); b.className='stepBtn'; b.type='button';
-    b.innerHTML=`<span class="stepNum">${i+1}</span><span><strong>${s.short}</strong><small>${s.part}</small><span class="kind">${s.kind}</span></span>`;
-    b.addEventListener('click',()=>go(i)); $('stepList').appendChild(b);
-  });
-}
-
-function setLayers(active=[]){qsa('#nmjScene .layer').forEach(el=>{el.classList.toggle('on',active.includes(el.id));el.classList.toggle('hot',active.includes(el.id)&&['channelLayer','calciumLayer','sercaLayer'].includes(el.id))})}
-function clamp(v,min=0,max=100){return Math.min(max,Math.max(min,v))}
-function livePhysics(){
-  const ca=+$('caSlider').value, freq=+$('freqSlider').value;
-  const caEffective=clamp(ca + Math.max(0,freq-1)*1.8);
-  const access=caEffective<20?0:(caEffective-20)/80;
-  let force=access*100;
-  if(!atpAvailable) force = access>0 ? Math.max(24,force*.36) : 0;
-  const length=clamp(100-force*.31,66,100);
-  return {ca:Math.round(caEffective),force:Math.round(force),length:Math.round(length)};
-}
-function updateMeters(vals){
-  const ids=[['signalPct','signalFill'],['calciumPct','calciumFill'],['forcePct','forceFill'],['lengthPct','lengthFill']];
-  ids.forEach((pair,i)=>{$(pair[0]).textContent=Math.round(vals[i])+'%';$(pair[1]).style.width=clamp(vals[i])+'%'});
-}
-function updateScale(scale){[1,2,3].forEach(n=>$('scale'+n).classList.toggle('on',n<=scale))}
-function resetSarco(){
-  $('sarcomere').classList.remove('contract'); qsa('.tropo').forEach(x=>x.classList.remove('open')); qsa('.bindingSite').forEach(x=>x.classList.add('blocked'));
-  qsa('.head').forEach(x=>x.classList.remove('bound','stroke')); qsa('.calciumOrb').forEach(x=>x.classList.remove('on')); qsa('.cyclePhase').forEach(x=>x.classList.remove('on'));
-}
-function phaseOn(name){qsa('.cyclePhase').forEach(x=>x.classList.toggle('on',x.dataset.phase===name))}
-function setSarco(mode,{fromCycle=false}={}){
-  resetSarco(); const p=livePhysics(); const calciumOn=p.ca>=25 && mode!=='relax';
-  const forceStage={expose:.16,bind:.46,stroke:.84,detach:.72,recock:.76,contract:1,relax:.08}[mode] ?? 1;
-  const stagedForce=Math.round(p.force*forceStage);
-  const stagedLength=Math.round(clamp(100-stagedForce*.31,66,100));
-  if(calciumOn){qsa('.calciumOrb').forEach(x=>x.classList.add('on'));qsa('.tropo').forEach(x=>x.classList.add('open'));qsa('.bindingSite').forEach(x=>x.classList.remove('blocked'))}
-  if(['bind','stroke','detach','recock','contract'].includes(mode) && calciumOn) qsa('.head').forEach(x=>x.classList.add('bound'));
-  if(['stroke','contract'].includes(mode) && calciumOn) qsa('.head').forEach(x=>x.classList.add('stroke'));
-  if(mode==='detach' && atpAvailable) qsa('.head').forEach(x=>x.classList.remove('bound','stroke'));
-  if(mode==='recock' && atpAvailable) qsa('.head').forEach(x=>x.classList.remove('bound','stroke'));
-  if(mode==='contract' && calciumOn && atpAvailable && p.force>15) $('sarcomere').classList.add('contract');
-  if(mode==='relax'){qsa('.tropo').forEach(x=>x.classList.remove('open'));qsa('.bindingSite').forEach(x=>x.classList.add('blocked'))}
-  if(mode==='bind')phaseOn('attach'); if(mode==='stroke'||mode==='contract')phaseOn('stroke'); if(mode==='detach')phaseOn('detach'); if(mode==='recock')phaseOn('recock');
-  $('atpBadge').textContent=atpAvailable?'ATP available':'ATP depleted'; $('atpBadge').classList.toggle('off',!atpAvailable);
-  $('rigorNote').classList.toggle('show',!atpAvailable && calciumOn && ['bind','stroke','detach','recock','contract'].includes(mode));
-  if(!fromCycle && steps[idx].scene==='sarco') updateMeters([steps[idx].meters[0],p.ca,stagedForce,stagedLength]);
-}
-function updateLabCopy(){
-  const ca=+$('caSlider').value,f=+$('freqSlider').value;
-  $('caVal').textContent=ca+'%'; $('freqVal').textContent=f===1?'1 pulse':f+' Hz';
-  $('caNote').textContent=ca<20?'Ca²⁺ is too low to expose many actin binding sites.':ca<55?'Some binding sites are exposed; force is limited.':'High Ca²⁺ exposes many actin binding sites and supports stronger force.';
-}
-function pulseStimulus(){
-  clearTimeout(transientTimer); const start=+$('caSlider').value, f=+$('freqSlider').value, boost=Math.min(100,start+18+f*1.7);
-  $('caSlider').value=Math.round(boost); updateLabCopy(); if(steps[idx].scene==='sarco')setSarco(steps[idx].mode);
-  showToast(f>8?'Repeated stimulation sustains Ca²⁺ and increases force.':'A stimulus briefly raises cytosolic Ca²⁺.');
-  transientTimer=setTimeout(()=>{if(idx<12){$('caSlider').value=start;updateLabCopy();if(steps[idx].scene==='sarco')setSarco(steps[idx].mode)}},1800);
-}
-function runCycle(){
-  if(steps[idx].scene!=='sarco'){showToast('Open a sarcomere step first.');return}
-  clearInterval(cycleTimer); const p=livePhysics();
-  if(p.ca<25){showToast('Ca²⁺ is too low: tropomyosin still blocks actin.');setSarco('expose',{fromCycle:true});return}
-  const phases=['bind','stroke','detach','recock'];let k=0;
-  setSarco(phases[0],{fromCycle:true});
-  cycleTimer=setInterval(()=>{
-    if(!atpAvailable && phases[k]==='stroke'){clearInterval(cycleTimer);showToast('Cycle stalled: ATP is required for myosin detachment.');return}
-    k++; if(k>=phases.length){clearInterval(cycleTimer);setSarco(steps[idx].mode,{fromCycle:true});return}
-    setSarco(phases[k],{fromCycle:true});
-  },720);
-}
-function showToast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>$('toast').classList.remove('show'),1900)}
-
-function showResource(type){
-  $('resourceScene').classList.add('active'); $('bubble').classList.add('hidden'); $('resourceGrid').innerHTML=''; $('quizArea').innerHTML='';
-  if(type==='glossary'){
-    $('resourceTitle').textContent='Glossary'; $('resourceLead').textContent='Key structures and molecules in skeletal-muscle contraction.';
-    glossary.forEach(([h,p])=>{const c=document.createElement('article');c.className='resourceCard';c.innerHTML=`<span class="miniTag">Term</span><h3>${h}</h3><p>${p}</p>`;$('resourceGrid').appendChild(c)});
-  }else if(type==='facts'){
-    $('resourceTitle').textContent='Key facts + misconceptions'; $('resourceLead').textContent='The mechanism makes more sense when these distinctions are kept straight.';
-    facts.forEach(([h,p,t])=>{const c=document.createElement('article');c.className='resourceCard';c.innerHTML=`<span class="miniTag">${t}</span><h3>${h}</h3><p>${p}</p>`;$('resourceGrid').appendChild(c)});
-  }else{
-    $('resourceTitle').textContent='Checkpoint'; $('resourceLead').textContent='Three questions. Use the causal sequence, not isolated memorization.'; quizIndex=0;quizScore=0;renderQuiz();
-  }
-}
-function renderQuiz(){
-  const area=$('quizArea'); area.innerHTML=''; quizAnswered=false;
-  if(quizIndex>=quiz.length){area.innerHTML=`<div class="quizWrap"><div class="scoreCard"><strong>${quizScore}/${quiz.length}</strong><span>${quizScore===3?'Perfect mechanism trace.':quizScore===2?'Strong. Revisit the missed causal link once.':'Use the step list to retrace the sequence, then try again.'}</span></div><button class="btn primary quizNext" id="retryQuiz" type="button">Try again</button></div>`;$('retryQuiz').onclick=()=>{quizIndex=0;quizScore=0;renderQuiz()};return}
-  const q=quiz[quizIndex]; const wrap=document.createElement('div');wrap.className='quizWrap';
-  wrap.innerHTML=`<div class="quizProgress">${quiz.map((_,i)=>`<span class="quizPip ${i<quizIndex?'done':i===quizIndex?'current':''}"></span>`).join('')}</div><div class="quizQuestion">${q.q}</div><div class="quizChoices" id="quizChoices"></div><div class="quizFeedback" id="quizFeedback"></div><button class="btn primary quizNext hidden" id="quizNextBtn" type="button">${quizIndex===quiz.length-1?'See score':'Next question'}</button>`;
-  area.appendChild(wrap); const choices=$('quizChoices');
-  q.choices.forEach((choice,i)=>{const b=document.createElement('button');b.className='choiceBtn';b.type='button';b.textContent=choice;b.onclick=()=>answerQuiz(i,b);choices.appendChild(b)});
-  $('quizNextBtn').onclick=()=>{quizIndex++;renderQuiz()};
-}
-function answerQuiz(i,btn){
-  if(quizAnswered)return;quizAnswered=true;const q=quiz[quizIndex];qsa('.choiceBtn').forEach(b=>b.disabled=true);
-  if(i===q.answer){btn.classList.add('correct');quizScore++;$('quizFeedback').textContent='Correct. '+q.explain}else{btn.classList.add('wrong');qsa('.choiceBtn')[q.answer].classList.add('correct');$('quizFeedback').textContent='Not quite. '+q.explain}
-  $('quizNextBtn').classList.remove('hidden');
-}
-
-function go(n){
-  idx=Math.max(0,Math.min(steps.length-1,n)); const s=steps[idx]; clearInterval(cycleTimer);
-  qsa('.stepBtn').forEach((b,i)=>{b.classList.toggle('active',i===idx);b.classList.toggle('done',i<idx)});
-  const activeBtn=qsa('.stepBtn')[idx]; if(activeBtn)activeBtn.scrollIntoView({block:'nearest',behavior:'smooth'});
-  $('stepCounter').textContent=`Step ${idx+1} of ${steps.length}`; $('partLabel').textContent=s.part; $('progressBar').style.width=((idx+1)/steps.length*100)+'%';
-  $('tag').textContent=s.tag; $('stepTitle').textContent=s.title; $('stepExplain').textContent=s.text; $('keyIdea').textContent=s.key; updateScale(s.scale||3);
-  $('nmjScene').classList.toggle('active',s.scene==='nmj'); $('sarcomereScene').classList.toggle('active',s.scene==='sarco'); $('resourceScene').classList.remove('active'); $('bubble').classList.remove('hidden');
-  if(s.scene==='nmj'){
-    setLayers(s.layers||[]); $('sceneLabel').textContent=idx<3?'Neuromuscular junction':'Excitation–contraction coupling'; updateMeters(s.meters);
-  }
-  if(s.scene==='sarco'){$('sceneLabel').textContent='Sarcomere / cross-bridge cycle';setSarco(s.mode)}
-  if(s.scene==='resource'){showResource(s.resource);$('sceneLabel').textContent='Reference';updateMeters(s.meters)}
-  $('bubbleText').innerHTML=s.bubble?`<span class="cause">${s.part}:</span> ${s.bubble}`:''; $('bubble').classList.toggle('hidden',s.scene==='resource');
-  $('labControls').classList.toggle('hidden',s.scene!=='sarco'); $('prevBtn').disabled=idx===0; $('nextBtn').disabled=idx===steps.length-1;
-  document.title=`${s.title} | How Muscle Contraction Works`;
-}
-function stopPlay(){if(timer)clearInterval(timer);timer=null;playing=false;$('playBtn').textContent='Play'}
-function play(){
-  if(playing){stopPlay();return} playing=true;$('playBtn').textContent='Pause';
-  timer=setInterval(()=>{if(idx>=steps.length-1){stopPlay();return}go(idx+1)},3000);
-}
-function restart(){stopPlay();clearInterval(cycleTimer);$('caSlider').value=88;$('freqSlider').value=1;atpAvailable=true;$('atpOn').classList.add('active');$('atpOff').classList.remove('active');$('atpVal').textContent='Normal';updateLabCopy();go(0);showToast('Module restarted.')}
-function enterFull(){document.body.classList.add('full');if(document.documentElement.requestFullscreen){document.documentElement.requestFullscreen().catch(()=>{})}}
-function exitFull(){document.body.classList.remove('full');if(document.fullscreenElement&&document.exitFullscreen){document.exitFullscreen().catch(()=>{})}}
-
-autoBind();
-function autoBind(){
-  $('prevBtn').onclick=()=>go(idx-1); $('nextBtn').onclick=()=>go(idx+1); $('playBtn').onclick=play; $('restartBtn').onclick=restart; $('fullBtn').onclick=enterFull; $('exitFullBtn').onclick=exitFull;
-  $('caSlider').oninput=()=>{updateLabCopy();if(steps[idx].scene==='sarco')setSarco(steps[idx].mode)};
-  $('freqSlider').oninput=()=>{updateLabCopy();if(steps[idx].scene==='sarco')setSarco(steps[idx].mode)};
-  $('atpOn').onclick=()=>{atpAvailable=true;$('atpVal').textContent='Normal';$('atpOn').classList.add('active');$('atpOff').classList.remove('active');if(steps[idx].scene==='sarco')setSarco(steps[idx].mode)};
-  $('atpOff').onclick=()=>{atpAvailable=false;$('atpVal').textContent='Depleted';$('atpOff').classList.add('active');$('atpOn').classList.remove('active');if(steps[idx].scene==='sarco')setSarco(steps[idx].mode)};
-  $('pulseBtn').onclick=pulseStimulus; $('cycleBtn').onclick=runCycle; $('resetLabBtn').onclick=()=>{clearInterval(cycleTimer);$('caSlider').value=88;$('freqSlider').value=1;atpAvailable=true;$('atpVal').textContent='Normal';$('atpOn').classList.add('active');$('atpOff').classList.remove('active');updateLabCopy();setSarco(steps[idx].mode);showToast('Lab reset.')};
-  $('lowCaPresetBtn').onclick=()=>{$('caSlider').value=12;updateLabCopy();if(steps[idx].scene==='sarco')setSarco(steps[idx].mode);showToast('Low Ca²⁺ preset: binding sites remain mostly blocked.')};
-  document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName))return;if(e.key==='ArrowRight')go(idx+1);if(e.key==='ArrowLeft')go(idx-1);if(e.key===' '){e.preventDefault();play()}if(e.key.toLowerCase()==='r')restart();if(e.key==='Escape')exitFull()});
-  document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement)document.body.classList.remove('full')});
-}
-
-buildSteps();updateLabCopy();go(0);
-</script>
+<noscript><main class="no-script"><h1>How muscle contraction works</h1><p>A motor-neuron action potential releases ACh. An end-plate potential triggers a muscle action potential. T-tubule CaV1.1 voltage sensors activate RyR1 channels, releasing SR calcium. Calcium binds troponin C and shifts tropomyosin. ATP-powered cross-bridge cycles slide actin over myosin. SERCA returns calcium to the SR so the fiber can relax.</p><p>Enable JavaScript to explore the interactive diagrams and checkpoints.</p><a href="../index.html">Return to Signal Atlas</a></main></noscript>
 </body>
 </html>
